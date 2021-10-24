@@ -1,8 +1,10 @@
 from django.http import JsonResponse
 from django.templatetags.static import static
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-
-from .models import Product
+from .models import Product, Order, OrderItem
+from .serializers import OrderSerializer
 
 
 def banners_list_api(request):
@@ -57,6 +59,21 @@ def product_list_api(request):
     })
 
 
+@api_view(['POST'])
 def register_order(request):
-    # TODO это лишь заглушка
-    return JsonResponse({})
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    order = Order.objects.create(
+        firstname = serializer.validated_data['firstname'],
+        lastname = serializer.validated_data['lastname'],
+        address = serializer.validated_data['address'],
+        phonenumber = serializer.validated_data['phonenumber'],
+    )
+
+    products_fields = serializer.validated_data['products']
+    order_items = [OrderItem(order=order, **fields) for fields in products_fields]
+    OrderItem.objects.bulk_create(order_items)
+
+    return Response(OrderSerializer(instance=order).data)
+
