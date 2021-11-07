@@ -1,7 +1,9 @@
 from django.contrib import admin
-from django.shortcuts import reverse
+from django.conf import settings
+from django.shortcuts import redirect, reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import Product
 from .models import ProductCategory
@@ -116,3 +118,10 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     list_display = ['id', 'firstname', 'lastname', 'address', 'phonenumber']
+
+    def response_change(self, request, obj):
+        next_url = request.GET.get('next')
+        if all((next_url, url_has_allowed_host_and_scheme(next_url, settings.ALLOWED_HOSTS))):
+            return redirect('restaurateur:view_orders')
+            
+        return super().response_change(request, obj)
