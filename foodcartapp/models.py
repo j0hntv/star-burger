@@ -130,13 +130,20 @@ class OrderQuerySet(models.QuerySet):
         return self.annotate(
             price=Sum(F('items__quantity') * F('items__price'))
         )
+    def unprocessed(self):
+        return self.filter(status='UNPROCESSED')
 
 
 class Order(models.Model):
+    STATUS_CHOICES = (
+        ('PROCESSED', 'Обработанный'),
+        ('UNPROCESSED', 'Необработанный'),
+    )
     firstname = models.CharField('Имя', max_length=32)
     lastname = models.CharField('Фамилия', max_length=32)
     address = models.CharField('Адрес', max_length=128)
     phonenumber = PhoneNumberField('Телефон')
+    status = models.CharField('Статус заказа', max_length=16, choices=STATUS_CHOICES, default='UNPROCESSED')
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
