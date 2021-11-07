@@ -139,6 +139,10 @@ class Order(models.Model):
         ('PROCESSED', 'Обработанный'),
         ('UNPROCESSED', 'Необработанный'),
     )
+    PAYMENT_CHOICES = (
+        ('CASH', 'Наличные'),
+        ('СARD', 'Электронно'),
+    )
     firstname = models.CharField('Имя', max_length=32)
     lastname = models.CharField('Фамилия', max_length=32)
     address = models.CharField('Адрес', max_length=128)
@@ -148,6 +152,7 @@ class Order(models.Model):
     registrated_at = models.DateTimeField('Время заказа', auto_now_add=True)
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
+    payment = models.CharField('Способ оплаты', max_length=8, choices=PAYMENT_CHOICES, default='CASH')
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
