@@ -144,6 +144,7 @@ class Order(models.Model):
     address = models.CharField('Адрес', max_length=128)
     phonenumber = PhoneNumberField('Телефон')
     status = models.CharField('Статус заказа', max_length=16, choices=STATUS_CHOICES, default='UNPROCESSED')
+    comment = models.TextField('Комментарий', blank=True)
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
