@@ -117,6 +117,7 @@ class OrderItemInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
+    readonly_fields = ['registrated_at']
     list_display = ['id', 'firstname', 'lastname', 'address', 'phonenumber']
 
     def response_change(self, request, obj):

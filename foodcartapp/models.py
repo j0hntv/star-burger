@@ -145,6 +145,9 @@ class Order(models.Model):
     phonenumber = PhoneNumberField('Телефон')
     status = models.CharField('Статус заказа', max_length=16, choices=STATUS_CHOICES, default='UNPROCESSED')
     comment = models.TextField('Комментарий', blank=True)
+    registrated_at = models.DateTimeField('Время заказа', auto_now_add=True)
+    called_at = models.DateTimeField('Время звонка', blank=True, null=True)
+    delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
