@@ -1,14 +1,14 @@
 from django import forms
+from django.conf import settings
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
-
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
-
 from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
+from utils.geocoder import calculate_distance
 
 
 class Login(forms.Form):
@@ -106,7 +106,16 @@ def view_orders(request):
         for order_item in order_items:
             restaurants.append(set([item.restaurant for item in order_item.product.menu_items.all()]))
 
-        order.restaurants = set.intersection(*restaurants)
+        restaurants = set.intersection(*restaurants)
+        if not restaurants:
+            continue
+
+        order.restaurants = sorted(
+            [{'name': restaurant.name, 'distance': calculate_distance(
+                settings.YANDEX_GEOCODER_TOKEN,
+                order.address,
+                restaurant.address
+                )} for restaurant in restaurants], key=lambda restaurant: restaurant['distance'])
 
     return render(request, template_name='order_items.html', context={
         'order_items': orders
