@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
 from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
-from utils.geocoder import calculate_distance
+from places.geocoder import calculate_distance
 
 
 class Login(forms.Form):
