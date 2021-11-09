@@ -153,6 +153,13 @@ class Order(models.Model):
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
     payment = models.CharField('Способ оплаты', max_length=8, choices=PAYMENT_CHOICES, default='CASH')
+    restaurant = models.ForeignKey(
+        Restaurant,
+        verbose_name='Ресторан',
+        related_name='orders',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}'
