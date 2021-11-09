@@ -7,9 +7,9 @@ class Place(models.Model):
     lon = models.FloatField('Долгота')
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
-    def __str__(self):
-        return self.address
-
     class Meta:
         verbose_name = 'Место'
         verbose_name_plural = 'Места'
+
+    def __str__(self):
+        return self.address
