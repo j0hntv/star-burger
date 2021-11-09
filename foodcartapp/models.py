@@ -147,12 +147,24 @@ class Order(models.Model):
     lastname = models.CharField('Фамилия', max_length=32)
     address = models.CharField('Адрес', max_length=128)
     phonenumber = PhoneNumberField('Телефон')
-    status = models.CharField('Статус заказа', max_length=16, choices=STATUS_CHOICES, default='UNPROCESSED')
+    status = models.CharField(
+        'Статус заказа',
+        max_length=16,
+        choices=STATUS_CHOICES,
+        default='UNPROCESSED',
+        db_index=True,
+    )
     comment = models.TextField('Комментарий', blank=True)
     registrated_at = models.DateTimeField('Время заказа', auto_now_add=True)
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
-    payment = models.CharField('Способ оплаты', max_length=8, choices=PAYMENT_CHOICES, default='CASH')
+    payment = models.CharField(
+        'Способ оплаты',
+        max_length=8,
+        choices=PAYMENT_CHOICES,
+        default='CASH',
+        db_index=True,
+    )
     restaurant = models.ForeignKey(
         Restaurant,
         verbose_name='Ресторан',
