@@ -123,6 +123,6 @@ class OrderAdmin(admin.ModelAdmin):
     def response_change(self, request, obj):
         next_url = request.GET.get('next')
         if all((next_url, url_has_allowed_host_and_scheme(next_url, settings.ALLOWED_HOSTS))):
-            return redirect('restaurateur:view_orders')
+            return redirect(next_url)
             
         return super().response_change(request, obj)
