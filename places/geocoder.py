@@ -11,7 +11,6 @@ def fetch_coordinates(apikey, address):
         "apikey": apikey,
         "format": "json",
     })
-    print(address)
     response.raise_for_status()
     found_places = response.json()['response']['GeoObjectCollection']['featureMember']
 
