@@ -170,6 +170,7 @@ class Order(models.Model):
         related_name='orders',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
     )
 
     objects = OrderQuerySet.as_manager()
