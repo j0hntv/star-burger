@@ -40,7 +40,7 @@
             <summary>Развернуть</summary>
             <ul>
               {% for restaurant in item.restaurants %}
-                <li>{{restaurant.name}} - <b>{{restaurant.distance|floatformat}} км</b></li>
+                <li>{{restaurant.name}} - <b>{% if restaurant.distance %}{{restaurant.distance|floatformat}} км {% else %} Расстояние не известно {% endif %}</b></li>
               {% empty %}
                 <li>Полностью заказа нет ни в одном ресторане! А-а-а-а-а!!!</li>
               {% endfor %}

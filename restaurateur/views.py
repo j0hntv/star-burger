@@ -102,20 +102,22 @@ def view_orders(request):
     for order in orders:
         order_items = order.items.all()
 
-        restaurants = []
+        order_restaurants = []
         for order_item in order_items:
-            restaurants.append(set([item.restaurant for item in order_item.product.menu_items.all()]))
+            order_restaurants.append(set([item.restaurant for item in order_item.product.menu_items.all()]))
 
-        restaurants = set.intersection(*restaurants)
-        if not restaurants:
+        common_order_restaurants = set.intersection(*order_restaurants)
+        if not common_order_restaurants:
             continue
 
+        sort_key = lambda restaurant: restaurant['distance'] if restaurant['distance'] else 0
         order.restaurants = sorted(
             [{'name': restaurant.name, 'distance': calculate_distance(
                 settings.YANDEX_GEOCODER_TOKEN,
                 order.address,
                 restaurant.address
-                )} for restaurant in restaurants], key=lambda restaurant: restaurant['distance'])
+                )} for restaurant in common_order_restaurants],
+                key=sort_key)
 
     return render(request, template_name='order_items.html', context={
         'order_items': orders

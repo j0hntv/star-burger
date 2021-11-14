@@ -26,14 +26,19 @@ def get_coordinates(apikey, address):
     place = Place.objects.filter(address=address).first()
 
     if not place:
-        place = Place(address=address)
-        place.lat, place.lon = fetch_coordinates(apikey, address)
-        place.save()
+        place_fields = {'address': address}
+        coordinates = fetch_coordinates(apikey, address)
+        if coordinates:
+            place_fields['lat'], place_fields['lon'] = coordinates
+
+        place = Place.objects.create(**place_fields)
 
     return place.lat, place.lon
 
 
 def calculate_distance(apikey, address_1, address_2):
-    coordinates_1 = get_coordinates(apikey, address_1)
-    coordinates_2 = get_coordinates(apikey, address_2)
-    return distance(coordinates_1, coordinates_2).km
+    lat_1, lon_1 = get_coordinates(apikey, address_1)
+    lat_2, lon_2  = get_coordinates(apikey, address_2)
+
+    if all((lat_1, lon_1, lat_2, lon_2)):
+        return distance((lat_1, lon_1), (lat_2, lon_2)).km
