@@ -32,6 +32,7 @@ def get_place_coordinates(apikey, address, saved_places):
             place_fields['lat'], place_fields['lon'] = coordinates
 
         place = Place.objects.create(**place_fields)
+        return place.lat, place.lon
 
     return place['lat'], place['lon']
 
