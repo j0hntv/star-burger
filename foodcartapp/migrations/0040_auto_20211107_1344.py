@@ -4,6 +4,13 @@ import django.core.validators
 from django.db import migrations, models
 
 
+def calculate_prices(apps, schema_editor):
+    OrderItem = apps.get_model('foodcartapp', 'OrderItem')
+    for item in OrderItem.objects.all().iterator():
+        item.price = item.product.price
+        item.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -17,6 +24,7 @@ class Migration(migrations.Migration):
             field=models.DecimalField(decimal_places=2, default=0, max_digits=8, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Цена'),
             preserve_default=False,
         ),
+        migrations.RunPython(calculate_prices),
         migrations.AlterField(
             model_name='orderitem',
             name='quantity',
