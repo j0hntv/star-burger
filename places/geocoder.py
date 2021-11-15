@@ -22,8 +22,8 @@ def fetch_coordinates(apikey, address):
     return lat, lon
 
 
-def get_coordinates(apikey, address):
-    place = Place.objects.filter(address=address).first()
+def get_place_coordinates(apikey, address, saved_places):
+    place = saved_places.get(address)
 
     if not place:
         place_fields = {'address': address}
@@ -33,12 +33,12 @@ def get_coordinates(apikey, address):
 
         place = Place.objects.create(**place_fields)
 
-    return place.lat, place.lon
+    return place['lat'], place['lon']
 
 
-def calculate_distance(apikey, address_1, address_2):
-    lat_1, lon_1 = get_coordinates(apikey, address_1)
-    lat_2, lon_2  = get_coordinates(apikey, address_2)
+def calculate_distance(apikey, address_1, address_2, saved_places):
+    lat_1, lon_1 = get_place_coordinates(apikey, address_1, saved_places)
+    lat_2, lon_2  = get_place_coordinates(apikey, address_2, saved_places)
 
     if all((lat_1, lon_1, lat_2, lon_2)):
         return distance((lat_1, lon_1), (lat_2, lon_2)).km

@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
@@ -7,7 +8,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
-from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
+from foodcartapp.models import Product, Restaurant, Order
+from places.models import Place
 from places.geocoder import calculate_distance
 
 
@@ -99,6 +101,18 @@ def view_restaurants(request):
 def view_orders(request):
     orders = Order.objects.unprocessed().with_price().prefetch_related('items__product__menu_items__restaurant')
 
+    orders_addresses = orders.values('address')
+    restaurant_addresses = Restaurant.objects.all().values('address')
+
+    saved_places = {
+        place.address: {
+            'lat': place.lat,
+            'lon': place.lon
+            } for place in Place.objects.filter(
+                Q(address__in=restaurant_addresses) | Q(address__in=orders_addresses)
+                )
+    }
+
     for order in orders:
         order_items = order.items.all()
 
@@ -115,7 +129,8 @@ def view_orders(request):
             [{'name': restaurant.name, 'distance': calculate_distance(
                 settings.YANDEX_GEOCODER_TOKEN,
                 order.address,
-                restaurant.address
+                restaurant.address,
+                saved_places
                 )} for restaurant in common_order_restaurants],
                 key=sort_key)
 
