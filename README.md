@@ -2,6 +2,8 @@
 
 Это сайт сети ресторанов Star Burger. Здесь можно заказать превосходные бургеры с доставкой на дом.
 
+Демо: [super-mega-puper.ru](https://super-mega-puper.ru/)
+
 ![скриншот сайта](https://dvmn.org/filer/canonical/1594651635/686/)
 
 
