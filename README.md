@@ -13,6 +13,24 @@
 
 Третий интерфейс — это админка. Преимущественно им пользуются программисты при разработке сайта. Также сюда заходит менеджер, чтобы обновить меню ресторанов Star Burger.
 
+## Как запустить Postgres
+
+Потребуется Docker:
+
+```
+docker run -d \
+    -e POSTGRES_PASSWORD=POSTGRES_PASSWORD \
+    -e POSTGRES_USER=POSTGRES_USER \
+    -e POSTGRES_HOST=POSTGRES_HOST \
+    -e POSTGRES_PORT=POSTGRES_PORT \
+    -e POSTGRES_DB=POSTGRES_DB \
+    -p POSTGRES_PORT:POSTGRES_PORT \
+    -v /opt/postgres_volume:/var/lib/postgresql/data \
+    --name postgres-db \
+    --restart always
+    postgres:14.1-alpine
+```
+
 ## Как запустить dev-версию сайта
 
 Для запуска сайта нужно запустить **одновременно** бэкенд и фронтенд, в двух терминалах.
@@ -144,6 +162,7 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте. Не стоит использовать значение по-умолчанию, **замените на своё**.
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 - `YANDEX_GEOCODER_TOKEN` - токен [API Яндекс-геокодера](https://developer.tech.yandex.ru/services/)
+- `DATABASE_URL` - URL для доступа к БД
 
 ## Цели проекта
 
