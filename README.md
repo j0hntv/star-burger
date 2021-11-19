@@ -27,7 +27,7 @@ docker run -d \
     -p POSTGRES_PORT:POSTGRES_PORT \
     -v /opt/postgres_volume:/var/lib/postgresql/data \
     --name postgres-db \
-    --restart always
+    --restart always \
     postgres:14.1-alpine
 ```
 
